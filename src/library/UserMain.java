@@ -7,130 +7,127 @@ public class UserMain {
 	static String redColorCode = "\033[31m";
 	static String resetColorCode = "\033[0m";
 
-	static void login(final String id,final String name,final String pass) {
+	static void login(final String id, final String name, final String pass) {
 		UserDatabase obj = new UserDatabase();
 
 		boolean opt = true;
-		char choi;
+		char choi = ' ';
 
 		while (opt) {
-			System.out.println("Please select an appropriate option");
+			System.out.println("\n\nPlease select an appropriate option");
 			System.out.println(" A - To Request Book");
 			System.out.println(" B - To Return Book");
 			System.out.println(" C - To Get Premium");
 			System.out.println(" D - To Cancel Premium");
 			System.out.println(" E - To View Books");
 			System.out.println(" X - To Quit User Management");
-			choi = scan.nextLine().charAt(0);
+
+			try {
+				String temp = "";
+				temp = scan.nextLine();
+				if (temp.length() != 1 || temp.charAt(0) == ' ')
+					throw new Exception();
+				choi = temp.charAt(0);
+			} catch (Exception e) {
+				System.out.println(redColorCode + "Invalid Choice !" + resetColorCode);
+			}
+			System.out.println("\033[H\033[2J");
 
 			switch (choi) {
-			case 'A':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
-				String bid = "", bname = "";
-				boolean flag = true;
-				while (flag) {
-					try {
-						System.out.println("Select A to Request Book through Book Id");
-						System.out.println("Select B to Request Book through Book Name");
-						choi = scan.nextLine().charAt(0);
-						if (choi == 'A') {
-							System.out.println("Enter Book Id:");
-							bid = scan.nextLine();
-
-							if (bid.equals(""))
-								throw new IllegalAccessException("Id can\'t be empty");
-						} else if (choi == 'B') {
-							System.out.println("Enter Book Name:");
-							bname = scan.nextLine();
-							if (bname.equals(""))
-								throw new IllegalAccessException("Name can\'t be empty");
-						} else
-							throw new IllegalAccessException("Only Enter Either A or B");
-
-						flag = false;
-					} catch (IllegalAccessException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (Exception e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					}
-				}
-				obj.requestBook(bid, bname, id, name, pass);
-			}
-				break;
-
-			case 'B':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
-				System.out.print("\033[H\033[2J");
-				System.out.flush();
-				{
+				case 'A': {
 					String bid = "", bname = "";
-					boolean flag = true;
-					while (flag) {
+					while (true) {
 						try {
-							System.out.println("Select A to Return Book through Book Id");
-							System.out.println("Select B to Return Book through Book Name");
-							choi = scan.nextLine().charAt(0);
+							System.out.println("Select A to Request Book through Book Id");
+							System.out.println("Select B to Request Book through Book Name");
+
+							bid = scan.nextLine();
+							if (bid.length() != 1 || bid.charAt(0) == ' ')
+								throw new Exception("Enter Either A or B");
+							choi = bid.charAt(0);
+							bid = "";
+
 							if (choi == 'A') {
 								System.out.println("Enter Book Id:");
 								bid = scan.nextLine();
 
 								if (bid.equals(""))
-									throw new IllegalAccessException("Id can\'t be empty");
+									throw new Exception("Id can\'t be empty");
 							} else if (choi == 'B') {
 								System.out.println("Enter Book Name:");
 								bname = scan.nextLine();
 								if (bname.equals(""))
-									throw new IllegalAccessException("Name can\'t be empty");
+									throw new Exception("Name can\'t be empty");
 							} else
-								throw new IllegalAccessException("Only Enter Either A or B");
+								throw new Exception("Enter Either A or B");
 
-							flag = false;
-						} catch (IllegalAccessException e) {
+							break;
+						} catch (Exception e) {
 							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
+					}
+					obj.requestBook(bid, bname, id, name, pass);
+				}
+					break;
+
+				case 'B': {
+					String bid = "", bname = "";
+					while (true) {
+						try {
+							System.out.println("Select A to Return Book through Book Id");
+							System.out.println("Select B to Return Book through Book Name");
+
+							bid = scan.nextLine();
+							if (bid.length() != 1 || bid.charAt(0) == ' ')
+								throw new Exception("Enter Either A or B");
+							choi = bid.charAt(0);
+							bid = "";
+
+							if (choi == 'A') {
+								System.out.println("Enter Book Id:");
+								bid = scan.nextLine();
+
+								if (bid.equals(""))
+									throw new Exception("Id can\'t be empty");
+							} else if (choi == 'B') {
+								System.out.println("Enter Book Name:");
+								bname = scan.nextLine();
+								if (bname.equals(""))
+									throw new Exception("Name can\'t be empty");
+							} else
+								throw new Exception("Only Enter Either A or B");
+							break;
 						} catch (Exception e) {
 							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
 						}
 					}
 					obj.returnBook(bid, bname, id, name, pass);
 				}
-			}
-				break;
+					break;
 
-			case 'C':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
+				case 'C': {
 					obj.getPremium(id, name);
-			}
-				break;
+				}
+					break;
 
-			case 'D':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
+				case 'D': {
 					obj.cancelPremium(id, name);
-			}
-				break;
+				}
+					break;
 
-			case 'E':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
+				case 'E': {
 					obj.usersBook(id, name);
-			}
-				break;
+				}
+					break;
 
-			case 'X':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
-				System.out.println(redColorCode + "Logging Out" + resetColorCode);
-				opt = false;
-			}
-				break;
+				case 'X': {
+					System.out.println(redColorCode + "Logging Out" + resetColorCode);
+					opt = false;
+				}
+					break;
 
-			default:
-				System.out.print("\033[H\033[2J");
-				System.out.flush();
-				System.out.println(redColorCode + "Invalid Choice" + resetColorCode);
+				default:
+					System.out.println(redColorCode + "Invalid Choice" + resetColorCode);
 			}
 		}
 	}
@@ -139,8 +136,8 @@ public class UserMain {
 		UserDatabase obj = new UserDatabase();
 
 		boolean opt = true;
-		char choi;
-		System.out.print("\033[H\033[2J");
+		char choi = ' ';
+		System.out.println("\033[H\033[2J");
 
 		while (opt) {
 			System.out.println("\n\nWelcome to User Management System !!!\n");
@@ -151,277 +148,271 @@ public class UserMain {
 			System.out.println(" D - To Delete An User");
 			System.out.println(" X - To Quit User Management");
 
-			choi = scan.nextLine().charAt(0);
+			try {
+				String temp = scan.nextLine();
+				if (temp.length() != 1)
+					throw new Exception();
+				choi = temp.charAt(0);
+				if (choi == ' ')
+					throw new Exception();
+			} catch (Exception e) {
+				System.out.println(redColorCode + "Invalid Choice !" + resetColorCode);
+			}
+
+			System.out.println("\033[H\033[2J");
 
 			switch (choi) {
-			case 'A':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
-				String name = "", pass = "", confpass, phone = "", city = "";
-				boolean premium = false, flag = true;
-				int temp;
+				case 'A': {
+					String name = "", pass = "", confpass, phone = "", city = "";
+					boolean premium = false;
+					int temp;
 
-				while (flag) {
-					try {
-						System.out.println("Enter your name:");
-						name = scan.nextLine();
-
-						if (name.equals(""))
-							throw new IllegalAccessException("Name can\'t be empty");
-						flag = false;
-					} catch (IllegalAccessException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (Exception e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					}
-				}
-				flag = true;
-
-				while (flag) {
-					try {
-						System.out.println("Enter your pass:");
-						pass = scan.nextLine();
-						System.out.println("Confirm your password:");
-						confpass = scan.nextLine();
-
-						if (pass.equals(""))
-							throw new IllegalAccessException("Pass can\'t be empty");
-
-						if (!pass.equals(confpass))
-							throw new IllegalAccessException("Password doesn\'t matches");
-
-						flag = false;
-
-					} catch (IllegalAccessException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (Exception e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					}
-				}
-				flag = true;
-
-				while (flag) {
-					try {
-						System.out.println("Enter your contact number:");
-						temp = Integer.parseInt(scan.nextLine());
-						phone = Integer.toString(temp);
-
-						if (temp < 0)
-							throw new IllegalAccessException("Phone number can\'t be negative");
-						if (phone.length() < 10 || phone.length() > 10)
-							throw new IllegalAccessException("Phone number should be of 10 digits");
-						flag = false;
-					} catch (IllegalAccessException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (NumberFormatException e) {
-						System.out.println(redColorCode + "Phone number should be only in digits" + resetColorCode);
-					} catch (Exception e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					}
-				}
-				flag = true;
-
-				while (flag) {
-					try {
-						System.out.println("Enter your city:");
-						city = scan.nextLine();
-
-						if (city.equals(""))
-							throw new IllegalAccessException("City can be empty");
-						flag = false;
-					} catch (IllegalAccessException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (Exception e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					}
-				}
-				flag = true;
-				while (flag) {
-					try {
-						System.out.println("Do you want premium membership ? (Y/N)");
-						choi = scan.nextLine().charAt(0);
-
-						if (choi == 'Y')
-							premium = true;
-						else if (choi == 'N')
-							premium = false;
-						else
-							throw new IllegalAccessException("");
-
-						flag = false;
-					} catch (Exception e) {
-						System.out.println(redColorCode + "Enter Either \'Y\' or \'N\' " + resetColorCode);
-					}
-				}
-
-				obj.createUser(name, pass, phone, city, premium);
-
-			}
-				break;
-
-			case 'B':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
-				String id = "", name = "", pass = "";
-				boolean flag = true;
-
-				while (flag) {
-					try {
-						System.out.println("Enter A To login via User Id\nEnter B to login via User Name");
-						choi = scan.nextLine().charAt(0);
-
-						if (choi == 'A') {
-							System.out.println("Enter your User Id:");
-							id = scan.nextLine();
-
-							if (id.equals(""))
-								throw new IllegalAccessException("Id can\'t be empty");
-						} else if (choi == 'B') {
+					while (true) {
+						try {
 							System.out.println("Enter your name:");
 							name = scan.nextLine();
 
 							if (name.equals(""))
-								throw new IllegalAccessException("Name can\'t be empty");
-						} else
-							throw new IllegalAccessException("Either Select \'A\' or \'B\' ");
-
-						flag = false;
-					} catch (IllegalAccessException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (IndexOutOfBoundsException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (Exception e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+								throw new Exception("Name can\'t be empty");
+							break;
+						} catch (Exception e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
 					}
+
+					while (true) {
+						try {
+							System.out.println("Enter your pass:");
+							pass = scan.nextLine();
+
+							if (pass.equals(""))
+								throw new Exception("Pass can\'t be empty");
+
+							System.out.println("Confirm your password:");
+							confpass = scan.nextLine();
+
+							if (!pass.equals(confpass))
+								throw new Exception("Password doesn\'t matches");
+
+							break;
+						} catch (Exception e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
+					}
+
+					while (true) {
+						try {
+							System.out.println("Enter your contact number:");
+							phone = scan.nextLine();
+							temp = Integer.parseInt(phone);
+
+							if (temp < 0)
+								throw new Exception();
+
+							if (phone.length() < 10 || phone.length() > 10)
+								throw new Exception();
+
+							break;
+						} catch (Exception e) {
+							System.out.println(
+									redColorCode + "Phone numbers must consist of ten positive numeric digits."
+											+ resetColorCode);
+						}
+					}
+
+					while (true) {
+						try {
+							System.out.println("Enter your city:");
+							city = scan.nextLine();
+
+							if (city.equals(""))
+								throw new Exception("City can be empty");
+							break;
+						} catch (Exception e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
+					}
+
+					while (true) {
+						try {
+							System.out.println("Do you want premium membership ? (Y/N)");
+							confpass = scan.nextLine();
+
+							if (confpass.length() > 1)
+								throw new Exception();
+
+							choi = confpass.charAt(0);
+
+							if (choi == 'Y')
+								premium = true;
+							else if (choi == 'N')
+								premium = false;
+							else
+								throw new Exception();
+
+							break;
+						} catch (Exception e) {
+							System.out.println(redColorCode + "Enter Either \'Y\' or \'N\' " + resetColorCode);
+						}
+					}
+					obj.createUser(name, pass, phone, city, premium);
+
 				}
+					break;
 
-				try {
-					System.out.println("Enter your password:");
-					pass = scan.nextLine();
+				case 'B': {
+					String id = "", name = "", pass = "";
 
-					if (pass.equals(""))
-						throw new IllegalAccessException("Password can\'t be empty");
-				} catch (IllegalAccessException e) {
-					System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-				} catch (Exception e) {
-					System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+					while (true) {
+						try {
+							System.out.println("Enter A To login via User Id\nEnter B to login via User Name");
+
+							id = scan.nextLine();
+							if (id.length() != 1)
+								throw new Exception("Either Select \'A\' or \'B\' ");
+							choi = id.charAt(0);
+							id = "";
+
+							if (choi == 'A') {
+								System.out.println("Enter your User Id:");
+								id = scan.nextLine();
+
+								if (id.equals(""))
+									throw new Exception("Id can\'t be empty");
+							} else if (choi == 'B') {
+								System.out.println("Enter your name:");
+								name = scan.nextLine();
+
+								if (name.equals(""))
+									throw new Exception("Name can\'t be empty");
+							} else
+								throw new Exception("Either Select \'A\' or \'B\' ");
+
+							break;
+						} catch (Exception e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
+					}
+					while (true) {
+						try {
+							System.out.println("Enter your password:");
+							pass = scan.nextLine();
+
+							if (pass.equals(""))
+								throw new Exception("Password can\'t be empty");
+							break;
+						} catch (Exception e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
+					}
+
+					if (obj.loginUser(id, name, pass))
+						login(id, name, pass);
 				}
+					break;
+				case 'C': {
+					String id = "", name = "";
 
-				if (obj.loginUser(id, name, pass)) {
-					System.out.println("Authentication Successful!");
-					login(id, name, pass);
-				} else
-					System.out.println("Authentication Failed!");
-
-			}
-				break;
-			case 'C':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
-				String id = "", name = "";
-				boolean flag = true;
-
-				while (flag) {
-					try {
-						System.out.println("Enter A To Search via User Id\nEnter B to Search via User Name");
-						choi = scan.nextLine().charAt(0);
-
-						if (choi == 'A') {
-							System.out.println("Enter your User Id:");
+					while (true) {
+						try {
+							System.out.println("Enter A To Search via User Id\nEnter B to Search via User Name");
 							id = scan.nextLine();
 
-							if (id.equals(""))
-								throw new IllegalAccessException("Id can\'t be empty");
-						} else if (choi == 'B') {
-							System.out.println("Enter your name:");
-							name = scan.nextLine();
+							if (id.length() != 1)
+								throw new Exception("Either Select \'A\' or \'B\' ");
 
-							if (name.equals(""))
-								throw new IllegalAccessException("Name can\'t be empty");
-						} else
-							throw new IllegalAccessException("Either Select \'A\' or \'B\' ");
+							choi = id.charAt(0);
+							id = "";
 
-						flag = false;
-					} catch (IllegalAccessException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (IndexOutOfBoundsException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (Exception e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+							if (choi == 'A') {
+								System.out.println("Enter your User Id:");
+								id = scan.nextLine();
+
+								if (id.equals(""))
+									throw new Exception("Id can\'t be empty");
+							} else if (choi == 'B') {
+								System.out.println("Enter your name:");
+								name = scan.nextLine();
+
+								if (name.equals(""))
+									throw new Exception("Name can\'t be empty");
+							} else
+								throw new Exception("Either Select \'A\' or \'B\' ");
+
+							break;
+						} catch (Exception e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
 					}
+
+					if (obj.searchUser(id, name))
+						System.out.println("User exists");
+					else
+						System.out.println("User doesn\'t exists");
 				}
+					break;
 
-				if (obj.searchUser(id, name))
-					System.out.println("User exists");
-				else
-					System.out.println("User doesn\'t exists");
-			}
-				break;
+				case 'D': {
+					String id = "", name = "", pass = "";
 
-			case 'D':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
-				String id = "", name = "", pass = "";
-				boolean flag = true;
-
-				while (flag) {
-					try {
-						System.out.println("Enter A To Delete via User Id\nEnter B to Delete via User Name");
-						choi = scan.nextLine().charAt(0);
-
-						if (choi == 'A') {
-							System.out.println("Enter your User Id:");
+					while (true) {
+						try {
+							System.out.println("Enter A To Delete via User Id\nEnter B to Delete via User Name");
 							id = scan.nextLine();
 
-							if (id.equals(""))
-								throw new IllegalAccessException("Id can\'t be empty");
-						} else if (choi == 'B') {
-							System.out.println("Enter your name:");
-							name = scan.nextLine();
+							if (id.length() != 1)
+								throw new Exception("Either Select \'A\' or \'B\' ");
 
-							if (name.equals(""))
-								throw new IllegalAccessException("Name can\'t be empty");
-						} else
-							throw new IllegalAccessException("Either Select \'A\' or \'B\' ");
+							choi = id.charAt(0);
+							id = "";
 
-						flag = false;
-					} catch (IllegalAccessException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (IndexOutOfBoundsException e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-					} catch (Exception e) {
-						System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+							if (choi == 'A') {
+								System.out.println("Enter your User Id:");
+								id = scan.nextLine();
+
+								if (id.equals(""))
+									throw new Exception("Id can\'t be empty");
+							} else if (choi == 'B') {
+								System.out.println("Enter your name:");
+								name = scan.nextLine();
+
+								if (name.equals(""))
+									throw new Exception("Name can\'t be empty");
+							} else
+								throw new Exception("Either Select \'A\' or \'B\' ");
+
+							break;
+						} catch (Exception e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
 					}
+					while (true) {
+						try {
+							System.out.println("Enter your password:");
+							pass = scan.nextLine();
+
+							if (pass.equals(""))
+								throw new IllegalAccessException("Password can\'t be empty");
+							break;
+						} catch (IllegalAccessException e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						} catch (Exception e) {
+							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+						}
+					}
+
+					obj.deleteUser(id, name, pass);
+
 				}
+					break;
 
-				try {
-					System.out.println("Enter your password:");
-					pass = scan.nextLine();
-
-					if (pass.equals(""))
-						throw new IllegalAccessException("Password can\'t be empty");
-				} catch (IllegalAccessException e) {
-					System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
-				} catch (Exception e) {
-					System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
+				case 'X': {
+					System.out.println(redColorCode + "Terminating User Manager ..." + resetColorCode);
+					opt = false;
 				}
-
-				obj.deleteUser(id, name, pass);
-
-			}
-				break;
-
-			case 'X':
-				System.out.print("\033[H\033[2J");
-				System.out.flush(); {
-				System.out.println(redColorCode + "Terminating User Manager ..." + resetColorCode);
-				opt = false;
-			}
-				break;
-			default:
-				System.out.print("\033[H\033[2J");
-				System.out.flush();
-				System.out.println(redColorCode + "Invalid Choice !" + resetColorCode);
+					break;
+				default:
+					System.out.println(redColorCode + "Invalid Choice !" + resetColorCode);
 			}
 		}
 	}

@@ -50,7 +50,9 @@ public class UserDatabase {
 			ResultSet r = s.executeQuery();
 			r.next();
 
-			if (r.getBoolean("Output"))
+			String output = r.getString("Output");
+			System.out.println(output);
+			if (output.equals("Login Successful !"))
 				return true;
 
 		} catch (Exception e) {
@@ -165,7 +167,7 @@ public class UserDatabase {
 	}
 
 	void getPremium(String id, String name) {
-		String query = "CALL Get_Premium( ? , ? ) ;";
+		String query = "SELECT Get_Premium( ? , ? ) AS Output;";
 
 		try {
 			PreparedStatement s = con.prepareStatement(query);
@@ -173,17 +175,16 @@ public class UserDatabase {
 			s.setString(1, id);
 			s.setString(2, name);
 
-			if (s.executeUpdate() > 0)
-				System.out.println("Premium Membership was successful");
-			else
-				System.out.println("Membership failed");
+			ResultSet r = s.executeQuery();
+			r.next();
+			System.out.println(r.getString("Output"));
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}
 	}
 
 	void cancelPremium(String id, String name) {
-		String query = "CALL Cancel_Premium( ? , ? ) ;";
+		String query = "SELECT Cancel_Premium( ? , ? ) AS Output;";
 
 		try {
 			PreparedStatement s = con.prepareStatement(query);
@@ -191,10 +192,9 @@ public class UserDatabase {
 			s.setString(1, id);
 			s.setString(2, name);
 
-			if (s.executeUpdate() > 0)
-				System.out.println("Premium Membership cancelled successfully");
-			else
-				System.out.println("Membership cancellation failed");
+			ResultSet r = s.executeQuery();
+			r.next();
+			System.out.println(r.getString("Output"));
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}

@@ -21,8 +21,7 @@ public class BookDatabase {
 			ResultSet r = s.executeQuery(query);
 
 			while (r.next()) {
-				System.out.println("Book Name: " + r.getString(2) + " Author: " + r.getString(3) + " Language: "
-						+ r.getString(4) + " Category: " + r.getString(5) + " Quantity: " + r.getString(6));
+				System.out.println(r.getString(2));
 			}
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
@@ -105,7 +104,40 @@ public class BookDatabase {
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}
+	}
 
+	void showLanguages() {
+		String query = "SELECT DISTINCT Language FROM Book ;";
+
+		try {
+			Statement s = con.createStatement();
+
+			ResultSet r = s.executeQuery(query);
+
+			System.out.println("Languages:");
+			while (r.next()) {
+				System.out.println(r.getString(1));
+			}
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+	}
+
+	void showCategories() {
+		String query = "SELECT DISTINCT Category FROM Book ;";
+
+		try {
+			Statement s = con.createStatement();
+
+			ResultSet r = s.executeQuery(query);
+
+			System.out.println("Category:");
+			while (r.next()) {
+				System.out.println(r.getString(1));
+			}
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		}
 	}
 
 }
