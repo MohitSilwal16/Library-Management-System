@@ -8,6 +8,12 @@ public class UserDatabase {
 	static {
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library_Management", "root", "kali");
+
+			String query = "CALL Set_Charges";
+
+			CallableStatement s = con.prepareCall(query);
+
+			s.executeUpdate();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
