@@ -1,0 +1,4 @@
+Command:
+mysqldump -u root -p LIBRARY_MANAGEMENT --routines --result-file="C:\Users\Lappy\OneDrive\Desktop\Cringe xD\Sem-3 & 'm Demotivated\Object Oriented Programming\Library Management System\SQL Database\SQL_File.sql"
+
+Enter this command in this path "C:\Program Files\MySQL\MySQL Server 8.0\bin"

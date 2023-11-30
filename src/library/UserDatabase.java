@@ -9,7 +9,7 @@ public class UserDatabase {
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library_Management", "root", "kali");
 
-			String query = "CALL Set_Charges";
+			String query = "CALL Init";
 
 			CallableStatement s = con.prepareCall(query);
 
@@ -121,15 +121,15 @@ public class UserDatabase {
 			System.out.println("Books are as follows:");
 
 			while (r.next()) {
-				System.out.println(r.getString("Book_Name"));
+				System.out.println("Book: " + r.getString("Book_Name") + " Deadline: " + r.getObject("Return_Date"));
 			}
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}
 	}
 
-	void requestBook(String bid, String bname, String id, String name, String pass) {
-		String query = "SELECT Request_Book( ? , ? , ? , ? , ?) AS Output";
+	void requestBook(String bid, String bname, String id, String name) {
+		String query = "SELECT Request_Book( ? , ? , ? , ? ) AS Output";
 
 		try {
 			PreparedStatement s = con.prepareStatement(query);
@@ -138,7 +138,6 @@ public class UserDatabase {
 			s.setString(2, bname);
 			s.setString(3, id);
 			s.setString(4, name);
-			s.setString(5, pass);
 
 			ResultSet r = s.executeQuery();
 
@@ -150,8 +149,8 @@ public class UserDatabase {
 		}
 	}
 
-	void returnBook(String bid, String bname, String id, String name, String pass) {
-		String query = "SELECT Return_Book( ? , ? , ? , ? , ?) AS Output";
+	void returnBook(String bid, String bname, String id, String name) {
+		String query = "SELECT Return_Book( ? , ? , ? , ? ) AS Output";
 
 		try {
 			PreparedStatement s = con.prepareStatement(query);
@@ -160,7 +159,6 @@ public class UserDatabase {
 			s.setString(2, bname);
 			s.setString(3, id);
 			s.setString(4, name);
-			s.setString(5, pass);
 
 			ResultSet r = s.executeQuery();
 

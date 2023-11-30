@@ -66,7 +66,7 @@ public class UserMain {
 							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
 						}
 					}
-					obj.requestBook(bid, bname, id, name, pass);
+					obj.requestBook(bid, bname, id, name);
 				}
 					break;
 
@@ -101,7 +101,7 @@ public class UserMain {
 							System.out.println(redColorCode + e.getLocalizedMessage() + resetColorCode);
 						}
 					}
-					obj.returnBook(bid, bname, id, name, pass);
+					obj.returnBook(bid, bname, id, name);
 				}
 					break;
 

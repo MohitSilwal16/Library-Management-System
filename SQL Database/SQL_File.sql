@@ -45,7 +45,7 @@ CREATE TABLE `book` (
 
 LOCK TABLES `book` WRITE;
 /*!40000 ALTER TABLE `book` DISABLE KEYS */;
-INSERT INTO `book` VALUES ('B0','Great Gatsby','F. Scott Fitzgerald','English','Fiction',25),('B1','Moby Dick','Herman Melville','English','Fiction',19),('B10','The Alchemist','Paulo Coelho','English','Philosophy',23),('B11','The Art of War','Sun Tzu','English','Philosophy',18),('B12','Think and Grow Rich','Napoleon Hill','English','Self-Help',22),('B13','Sapiens','Yuval Noah Harari','English','History',20),('B14','Cosmos','Carl Sagan','English','Science',30),('B15','The Grand Design','Stephen Hawking','English','Science',25),('B16','The Lean Startup','Eric Ries','English','Business',28),('B17','Rich Dad Poor Dad','Robert Kiyosaki','English','Business',22),('B18','The Innovator’s Dilemma','Clayton Christensen','English','Business',20),('B2','Pride and Prejudice','Jane Austen','English','Fiction',18),('B3','To Kill a Mockingbird','Harper Lee','English','Fiction',22),('B4','1984','George Orwell','English','Fiction',30),('B5','The Catcher in the Rye','J.D. Salinger','English','Fiction',15),('B6','War and Peace','Leo Tolstoy','English','Fiction',12),('B7','The Hobbit','J.R.R. Tolkien','English','Fantasy',28),('B8','Harry Potter','J.K. Rowling','English','Fantasy',34),('B9','Lord of the Rings','J.R.R. Tolkien','English','Fantasy',40);
+INSERT INTO `book` VALUES ('B0','Great Gatsby','F. Scott Fitzgerald','English','Fiction',25),('B1','Moby Dick','Herman Melville','English','Fiction',20),('B10','The Alchemist','Paulo Coelho','English','Philosophy',23),('B11','The Art of War','Sun Tzu','English','Philosophy',18),('B12','Think and Grow Rich','Napoleon Hill','English','Self-Help',22),('B13','Sapiens','Yuval Noah Harari','English','History',20),('B14','Cosmos','Carl Sagan','English','Science',30),('B15','The Grand Design','Stephen Hawking','English','Science',25),('B16','The Lean Startup','Eric Ries','English','Business',28),('B17','Rich Dad Poor Dad','Robert Kiyosaki','English','Business',22),('B18','The Innovator’s Dilemma','Clayton Christensen','English','Business',20),('B2','Pride and Prejudice','Jane Austen','English','Fiction',18),('B3','To Kill a Mockingbird','Harper Lee','English','Fiction',22),('B4','1984','George Orwell','English','Fiction',30),('B5','The Catcher in the Rye','J.D. Salinger','English','Fiction',15),('B6','War and Peace','Leo Tolstoy','English','Fiction',12),('B7','The Hobbit','J.R.R. Tolkien','English','Fantasy',28),('B8','Harry Potter','J.K. Rowling','English','Fantasy',34),('B9','Lord of the Rings','J.R.R. Tolkien','English','Fantasy',40);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -94,7 +94,7 @@ CREATE TABLE `borrow` (
 
 LOCK TABLES `borrow` WRITE;
 /*!40000 ALTER TABLE `borrow` DISABLE KEYS */;
-INSERT INTO `borrow` VALUES ('U5','B8','2023-10-05','2023-10-15',460),('U5','B17','2023-10-15','2023-10-30',310),('U5','B10','2023-10-05','2023-10-15',460),('U5','B1','2023-11-17','2023-12-02',0);
+INSERT INTO `borrow` VALUES ('U5','B8','2023-10-05','2023-10-15',460),('U5','B17','2023-10-15','2023-10-30',310),('U5','B10','2023-10-05','2023-10-15',460);
 /*!40000 ALTER TABLE `borrow` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,7 +193,7 @@ CREATE TABLE `premium` (
 
 LOCK TABLES `premium` WRITE;
 /*!40000 ALTER TABLE `premium` DISABLE KEYS */;
-INSERT INTO `premium` VALUES ('U1',NULL),('U5','2023-11-29'),('U9','2023-11-29');
+INSERT INTO `premium` VALUES ('U1',NULL),('U5','2023-12-29');
 /*!40000 ALTER TABLE `premium` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,7 +220,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('U1',1,0),('U5',1,4),('U9',1,0);
+INSERT INTO `user` VALUES ('U1',1,0),('U5',1,3),('U9',0,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -571,7 +571,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `Request_Book`(Bid VARCHAR(4), BName VARCHAR(30), Uid VARCHAR(4) , UName VARCHAR(30), UPass TEXT) RETURNS text CHARSET utf8mb4
+CREATE DEFINER=`root`@`localhost` FUNCTION `Request_Book`(Bid VARCHAR(4), BName VARCHAR(30), Uid VARCHAR(4) , UName VARCHAR(30)) RETURNS text CHARSET utf8mb4
     DETERMINISTIC
 BEGIN
     DECLARE bookExists INT;
@@ -579,6 +579,7 @@ BEGIN
     DECLARE borrowLimit BOOLEAN;
     DECLARE temp INT;
     DECLARE userHoldsBook BOOLEAN;
+    
 
     SET bookExists = Search_Book(Bid, BName);
     SET isAvailable = Book_Avai(Bid, BName);
@@ -604,6 +605,10 @@ BEGIN
     IF userHoldsBook = 1 THEN
 		RETURN "User can\'t borrow the same book again" ;
 	END IF;
+    
+    IF User_Has_Penalties(Uid,Bid) = 1 THEN
+		RETURN "User has penalties";
+    END IF;
     
         UPDATE Book
         SET Quantity = Quantity - 1
@@ -639,7 +644,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `Return_Book`(Bid VARCHAR(4) , BName VARCHAR(30) , Uid VARCHAR(4) , UName VARCHAR(30) , UPass TEXT) RETURNS text CHARSET utf8mb4
+CREATE DEFINER=`root`@`localhost` FUNCTION `Return_Book`(Bid VARCHAR(4) , BName VARCHAR(30) , Uid VARCHAR(4) , UName VARCHAR(30)) RETURNS text CHARSET utf8mb4
     DETERMINISTIC
 BEGIN
 	DECLARE returnLimit INT ;
@@ -757,6 +762,32 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `User_Has_Penalties` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `User_Has_Penalties`(Uid VARCHAR(4) , Bid VARCHAR(4)) RETURNS tinyint(1)
+    DETERMINISTIC
+BEGIN
+	DECLARE charges INT;
+    SET charges = (SELECT Charges FROM Borrow WHERE User_Id = Uid AND Book_Id = Bid);
+    
+    IF charges = 0 THEN
+		RETURN FALSE;
+    END IF;
+    RETURN TRUE;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `User_Holds_Book` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -849,6 +880,66 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Init` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Init`()
+BEGIN
+	CALL Premium_Deadline_Check();
+    CALL Set_Charges();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Premium_Deadline_Check` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Premium_Deadline_Check`()
+BEGIN
+	DECLARE done INT DEFAULT 1;
+    DECLARE uid VARCHAR(4);
+    DECLARE vdate DATE;
+    DECLARE My_Cursor CURSOR FOR SELECT User_Id , Validity FROM Premium;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 0;
+    
+    OPEN My_Cursor;
+    
+	WHILE done DO
+		FETCH My_Cursor INTO uid , vdate;
+        IF DATEDIFF(vdate , CURDATE()) < 0 THEN
+			DELETE
+            FROM Premium
+            WHERE User_id = uid;
+            
+            UPDATE User
+            SET Premium_Mem = 0
+            WHERE User_Id = Uid;
+        END IF;
+    END WHILE;
+    
+    CLOSE My_Cursor;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `Set_Charges` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -903,7 +994,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Users_Book`(IN Uid VARCHAR(4) , IN UName VARCHAR(30) )
 BEGIN
-		SELECT Book_Name
+		SELECT Book_Name , Return_Date
 		FROM Borrow
 		NATURAL JOIN User
 		NATURAL JOIN Book
@@ -926,4 +1017,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-30 20:08:07
+-- Dump completed on 2023-11-30 21:39:25
