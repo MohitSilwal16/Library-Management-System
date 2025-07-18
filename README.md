@@ -1,3 +1,2 @@
 # Library-Management-System
-Implementation of JDBC along with MYSQL
-Nothing much
+Robust Library Management System using JDBC & MySQL
