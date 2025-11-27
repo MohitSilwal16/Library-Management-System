@@ -1,2 +1,2 @@
 # Library-Management-System
-Robust Library Management System using JDBC & MySQL
+Robust Library Management System using JDBC
